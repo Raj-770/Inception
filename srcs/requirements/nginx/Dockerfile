@@ -12,12 +12,8 @@ RUN mkdir -p /var/run/nginx
 
 COPY conf/nginx.conf /etc/nginx/nginx.conf
 
-COPY tools/index.html /usr/share/nginx/html
-
 EXPOSE 443
 
-RUN chmod 755 /var/www/html
-
-RUN chown -R www-data:www-data /var/www/html
+COPY tools/index.html /var/www/html
 
 CMD [ "nginx", "-g", "daemon off;" ]
