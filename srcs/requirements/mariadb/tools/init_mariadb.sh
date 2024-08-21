@@ -1,5 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 
+# Ensure the MariaDB service is started
 service mysql start
 
 # Wait for MariaDB to start up completely
@@ -8,20 +9,20 @@ while ! mysqladmin ping --silent; do
 done
 
 # Check if the initial setup needs to be run
-if [ ! -f "/var/lib/mysql/initialized.flag"]; then
+if [ ! -f "/var/lib/mysql/initialized.flag" ]; then
 	# Create the initial setup flag file
-	touch /vat/lib/mysql/initialized.flag
+	touch /var/lib/mysql/initialized.flag
 
 	# Secure the installation (set root password and apply security settings)
 	mysql_secure_installation <<EOF
 
-y	# Set root password
+y    # Set root password
 ${ROOT_PASSWORD}
 ${ROOT_PASSWORD}
-y	# Remove anonymous user
-y	# Disallow root login remotely
-y	# Remove test detabase and access to it
-y	# Reload privilegs tables now
+y    # Remove anonymous users
+y    # Disallow root login remotely
+y    # Remove test database and access to it
+y    # Reload privilege tables now
 EOF
 
 	# SQL to set up initial database and user
@@ -33,5 +34,5 @@ EOF
 EOSQL
 fi
 
-# Keep the container running by hading over control to MariaDB's main process
+# Keep the container running by handing over control to MariaDB's main process
 exec mysqld_safe
