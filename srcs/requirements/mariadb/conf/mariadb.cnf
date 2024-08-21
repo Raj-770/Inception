@@ -1,0 +1,11 @@
+[mysqld]
+
+## Basic Server Settings
+user	= mariadb
+port	= 3306
+datadir	= /var/lib/mysql
+socket	= /var/run/mysqld/mysqld.sock
+
+## Security Settings
+# Only this IP address can connect to the server
+bind-address = 0.0.0.0
