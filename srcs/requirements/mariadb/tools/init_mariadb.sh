@@ -31,8 +31,10 @@ EOF
 		CREATE USER IF NOT EXISTS '${DB_USER}'@'%' IDENTIFIED BY '${DB_PASSWORD}';
 		GRANT ALL PRIVILEGES ON \`${DB_NAME}\`.* TO '${DB_USER}'@'%';
 		FLUSH PRIVILEGES;
+		SHOW DATABASES;
 EOSQL
 fi
 
-# Keep the container running by handing over control to MariaDB's main process
-exec mysqld_safe
+/etc/init.d/mysql stop
+
+exec "$@"
