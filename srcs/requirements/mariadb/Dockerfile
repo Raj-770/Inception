@@ -11,8 +11,12 @@ COPY conf/mariadb.cnf /etc/mysql/mariadb.conf.d/99-custom.cnf
 COPY tools/init_mariadb.sh /usr/local/bin/startup.sh
 RUN chmod +x /usr/local/bin/startup.sh
 
+ENV DB_NAME wordpress_db
+ENV DB_USER wordpress_user
+ENV DB_PASSWORD secure_password
+ENV ROOT_PASSWORD root_password
+
 EXPOSE 3306
 
-ENTRYPOINT [ "/usr/local/bin/startup.sh" ]
+CMD [ "/usr/local/bin/startup.sh" ]
 
-CMD ["mysqld"]

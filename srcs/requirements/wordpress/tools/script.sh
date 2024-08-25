@@ -25,14 +25,14 @@ mv /var/www/html/wp-config-sample.php /var/www/html/wp-config.php
 mv /wp-config.php /var/www/html/wp-config.php
 
 
-sed -i -r "s/db1/$db_name/1"   wp-config.php
-sed -i -r "s/user/$db_user/1"  wp-config.php
-sed -i -r "s/pwd/$db_pwd/1"    wp-config.php
+sed -i -r "s/db1/$DB_NAME/1"   wp-config.php
+sed -i -r "s/user/$DB_USER/1"  wp-config.php
+sed -i -r "s/pwd/$DB_PASSWORD/1"    wp-config.php
 
-wp core install --url=$DOMAIN_NAME/ --title=$WP_TITLE --admin_user=$WP_ADMIN_USR --admin_password=$WP_ADMIN_PWD --admin_email=$WP_ADMIN_EMAIL --skip-email --allow-root
+wp core install --url=$WP_URL/ --title=$WP_TITLE --admin_user=$WP_ADMIN_NAME --admin_password=$WP_ADMIN_PASS --admin_email=$WP_ADMIN_EMAIL --skip-email --allow-root
 
 
-wp user create $WP_USR $WP_EMAIL --role=author --user_pass=$WP_PWD --allow-root
+wp user create $WP_USER_NAME $WP_USER_EMAIL --role=author --user_pass=$WP_USER_PASS --allow-root
 
 
 wp theme install astra --activate --allow-root
