@@ -1,22 +1,28 @@
+# Use Debian Buster as the base image
 FROM debian:buster
 
-RUN apt update -y && apt upgrade -y && apt-get install mariadb-server procps -y
+# Update packages and install MariaDB and its client
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y mariadb-server mariadb-client && \
+    rm -rf /var/lib/apt/lists/*
 
-# Here the 99-custom allows mariadb to process this config file at the
-# end as it processes config files in alphabetical order and this allows
-# it to override the previously set parameters.
-COPY conf/mariadb.cnf /etc/mysql/mariadb.conf.d/99-custom.cnf
+# Create necessary directories and set permissions
+RUN mkdir -p /var/lib/mysql /var/run/mysqld && \
+    chown -R mysql:mysql /var/lib/mysql /var/run/mysqld
 
-# Copy the startup script into the container
-COPY tools/init_mariadb.sh /usr/local/bin/startup.sh
+# Copy the MariaDB configuration file
+COPY ./conf/mariadb.cnf /etc/mysql/mariadb.conf.d/my.cnf
+
+# Initialize the database
+RUN mysql_install_db --user=mysql --datadir=/var/lib/mysql
+
+# Copy the initialization script and make it executable
+COPY ./tools/init_mariadb.sh /usr/local/bin/startup.sh
 RUN chmod +x /usr/local/bin/startup.sh
 
-ENV DB_NAME wordpress_db
-ENV DB_USER wordpress_user
-ENV DB_PASSWORD secure_password
-ENV ROOT_PASSWORD root_password
-
+# Expose the port MariaDB listens on
 EXPOSE 3306
 
+# Set the container's entry point to the initialization script
 CMD [ "/usr/local/bin/startup.sh" ]
-

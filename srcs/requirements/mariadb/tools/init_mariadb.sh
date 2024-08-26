@@ -1,24 +1,28 @@
 #!/bin/bash
 
-mkdir -p /run/mysqld
-chown mysql:mysql /run/mysqld
+# Function to create SQL commands to set up the database and user
+create_sql_file() {
+    cat << EOF > bootstrap.sql
+    FLUSH PRIVILEGES;
+    CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\`;
+    CREATE USER IF NOT EXISTS '${DB_USER}'@'%' IDENTIFIED BY '${DB_PASSWORD}';
+    GRANT ALL PRIVILEGES on \`${DB_NAME}\`.* TO '${DB_USER}'@'%';
+    FLUSH PRIVILEGES;
+EOF
+}
 
-service mysql start
+# Function to run the bootstrap SQL script
+run_bootstrap() {
+    # Use mysqld to run the bootstrap commands
+    mysqld --user=mysql --bootstrap < bootstrap.sql
+    rm -f bootstrap.sql
+}
 
-sleep 5
+# Main execution block
+if [ ! -d "/var/lib/mysql/${DB_NAME}" ]; then
+    create_sql_file
+    run_bootstrap
+fi
 
-echo "Creatng DB and USER for wordpress..."
-
-echo "CREATE DATABASE IF NOT EXISTS $DB_NAME;" > db1.sql
-echo "CREATE USER IF NOT EXISTS '$DB_USER'@'%' IDENTIFIED BY '$DB_PASSWORD' ;" >> db1.sql
-echo "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'%' ;" >> db1.sql
-echo "ALTER USER 'root'@'localhost' IDENTIFIED BY '12345' ;" >> db1.sql
-echo "FLUSH PRIVILEGES;" >> db1.sql
-
-mysql < db1.sql
-
-echo "Restating mysql deamon..."
-
-kill $(cat /var/run/mysqld/mysqld.pid)
-
-mysqld
+# Start the MariaDB server
+exec /usr/sbin/mysqld --datadir=/var/lib/mysql --user=mysql
