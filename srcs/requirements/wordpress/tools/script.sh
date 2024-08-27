@@ -13,7 +13,7 @@ wp config create	--allow-root --force \
 					--dbpass="$DB_PASSWORD" \
 					--dbhost="mariadb:3306"
 
-wp core install	--allow-root--url="$WP_URL" \
+wp core install	--allow-root --url="$WP_URL" \
 				--title="$WP_TITLE" \
 				--admin_user="$WP_ADMIN_NAME" \
 				--admin_password="$WP_ADMIN_PASS" \
