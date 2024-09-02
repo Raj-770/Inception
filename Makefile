@@ -1,10 +1,9 @@
 DC_FILE := srcs/docker-compose.yml
 
-CONTAINERS := nginx wordpress mariadb
-IMAGES := nginx wordpress mariadb
-VOLUMES := database wordpress
+ensure-dirs:
+	@mkdir -p /home/rpambhar/data /home/rpambhar/data/mariadb /home/rpambhar/data/wordpress
 
-up:
+up: ensure-dirs
 	@echo "Building and starting all containers..."
 	@docker compose -f $(DC_FILE) up --build -d
 
@@ -16,7 +15,7 @@ stop:
 	@echo "Stopping containers..."
 	@docker compose -f $(DC_FILE) stop
 
-start:
+start: ensure-dirs
 	@echo "Starting containers..."
 	@docker compose -f $(DC_FILE) start
 
@@ -61,4 +60,4 @@ help:
 	@echo "  fclean        - Clean all containers, images, and volumes then prune system"
 	@echo "  reset         - Reset the entire project and data"
 
-.PHONY: up down stop start status clean clean-images clean-volumes fclean reset help
+.PHONY: up down stop start status clean clean-images clean-volumes fclean reset help ensure-dirs
