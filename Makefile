@@ -47,17 +47,4 @@ reset: fclean
 	@rm -rf /home/rpambhar/data/mariadb /home/rpambhar/data/wordpress
 	@mkdir /home/rpambhar/data/mariadb /home/rpambhar/data/wordpress
 
-help:
-	@echo "Available targets:"
-	@echo "  up            - Build and start all containers"
-	@echo "  down          - Stop and remove all containers"
-	@echo "  start         - Start all stopped containers"
-	@echo "  stop          - Stop all running containers"
-	@echo "  status        - Show status of containers"
-	@echo "  clean         - Remove containers, images, and volumes"
-	@echo "  clean-images  - Remove all Docker images"
-	@echo "  clean-volumes - Remove all Docker volumes"
-	@echo "  fclean        - Clean all containers, images, and volumes then prune system"
-	@echo "  reset         - Reset the entire project and data"
-
-.PHONY: up down stop start status clean clean-images clean-volumes fclean reset help ensure-dirs
+.PHONY: up down stop start status clean clean-images clean-volumes fclean reset ensure-dirs
